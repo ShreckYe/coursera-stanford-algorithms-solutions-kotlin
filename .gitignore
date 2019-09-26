@@ -68,5 +68,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 
-# Exclude the data files downloaded from Coursera
+# Personal assignment files downloaded from Coursera
 *.txt

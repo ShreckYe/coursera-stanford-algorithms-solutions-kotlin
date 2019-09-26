@@ -1,10 +1,10 @@
+package shreckye.coursera.algorithms
+
 import java.io.File
+import kotlin.test.assertEquals
 
 val filename = args[0]
-
-val integers = IntArray(100_000)
-var i = 0
-File(filename).forEachLine { integers[i++] = it.toInt() }
+val integers = File(filename).useLines { it.map(String::toInt).toIntArray(100_000) }
 
 fun mergeSortAndCountNumInversions(
     integers: IntArray,
@@ -45,12 +45,11 @@ fun mergeSortAndCountNumInversions(
 
 println(mergeSortAndCountNumInversions(integers).second)
 
-for (n in 1..1000) {
-    mergeSortAndCountNumInversions(IntArray(n) { it }).second.let {
-        assert(it == 0L) { "Assertion failed for n = $n incremental case with $it inversions" }
-    }
-    mergeSortAndCountNumInversions(IntArray(n) { n - it }).second.let {
-        val nL = n.toLong()
-        assert(it == nL * (nL - 1) / 2) { "Assertion failed for n = $n decremental case with $it inversions" }
-    }
+
+// Test cases
+for (n in 1 until 1024) {
+    assertEquals(0L, mergeSortAndCountNumInversions(IntArray(n) { it }).second, "n = $n")
+
+    val nL = n.toLong()
+    assertEquals(nL * (nL - 1) / 2, mergeSortAndCountNumInversions(IntArray(n) { n - it }).second, "n = $n")
 }

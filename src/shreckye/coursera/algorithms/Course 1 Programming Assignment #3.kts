@@ -1,10 +1,10 @@
+package shreckye.coursera.algorithms
+
 import java.io.File
+import kotlin.test.assertEquals
 
 val filename = args[0]
-
-val integers = IntArray(10_000)
-var i = 0
-File(filename).forEachLine { integers[i++] = it.toInt() }
+val integers = File(filename).useLines { it.map(String::toInt).toIntArray(10_000) }
 
 fun quickSortAndCountNumComparisons(
     integers: IntArray,
@@ -65,40 +65,21 @@ integersToSort = integers.copyOf()
 println("3. ${quickSortAndCountNumComparisonsUsingMedianOfThreeAsPivot(integersToSort)}")
 
 
-for (n in 0..1000) {
+// Test cases
+for (n in 0 until 1024) {
     val maxNumComparisons = n * (n - 1) / 2
-    quickSortAndCountNumComparisons(IntArray(n) { it }).let {
-        assert(it == maxNumComparisons) { "n = $n and numComparisons = $it" }
-    }
-    quickSortAndCountNumComparisons(IntArray(n) { n - it }).let {
-        assert(it == maxNumComparisons) { "n = $n and numComparisons = $it" }
-    }
-
-    quickSortAndCountNumComparisonsUsingFinalElementAsPivot(IntArray(n) { it }).let {
-        assert(it == maxNumComparisons) { "n = $n and numComparisons = $it" }
-    }
-    quickSortAndCountNumComparisonsUsingFinalElementAsPivot(IntArray(n) { n - it }).let {
-        assert(it == maxNumComparisons) { "n = $n and numComparisons = $it" }
-    }
+    assertEquals(maxNumComparisons, quickSortAndCountNumComparisons(IntArray(n) { it }))
+    assertEquals(maxNumComparisons, quickSortAndCountNumComparisons(IntArray(n) { n - it }))
+    assertEquals(maxNumComparisons, quickSortAndCountNumComparisonsUsingFinalElementAsPivot(IntArray(n) { it }))
+    assertEquals(maxNumComparisons, quickSortAndCountNumComparisonsUsingFinalElementAsPivot(IntArray(n) { n - it }))
 }
 
 for (n in 0..10) {
     val size = (2 pow n + 1) - 1
     val expectedNumOfComparisons = (n - 1) * (2 pow n + 1) + 2
-    quickSortAndCountNumComparisonsUsingMedianOfThreeAsPivot(IntArray(size) { it }).let {
-        assert(it == expectedNumOfComparisons) { "size = $size and numComparisons = $it" }
-    }
+    assertEquals(
+        expectedNumOfComparisons,
+        quickSortAndCountNumComparisonsUsingMedianOfThreeAsPivot(IntArray(size) { it }),
+        "size = $size"
+    )
 }
-
-infix fun Int.pow(y: Int): Int =
-    when (y) {
-        0 -> 1
-        1 -> this
-        else -> {
-            val rPow = pow(y / 2)
-            var r = rPow * rPow
-            if (y % 2 == 1)
-                r *= this
-            r
-        }
-    }

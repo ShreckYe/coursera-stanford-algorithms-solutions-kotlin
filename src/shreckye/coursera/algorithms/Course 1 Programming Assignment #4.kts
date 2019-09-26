@@ -1,13 +1,11 @@
-import java.io.File
+package shreckye.coursera.algorithms
+
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.log2
 
 val filename = args[0]
 
-class Vertex(val label: Int, val edges: MutableList<Edge>) {
-}
-
+class Vertex(val label: Int, val edges: MutableList<Edge>)
 class Edge(var vertex1: Vertex, var vertex2: Vertex)
 
 /*@Suppress("NOTHING_TO_INLINE")
@@ -19,14 +17,8 @@ inline fun <T> Array<T>.setVertex(vertexLabel: Int, vertex: T) = get(vertexLabel
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T> Array<T>.withVertexLabel() =
     withIndex().map { (it.index + 1) to it.value }*/
-typealias VertexLabels = Pair<Int, IntArray>
 
-val verticesLabels = ArrayList<VertexLabels>(200)
-val WHITE_SPACE_REGEX = Regex("\\s+")
-File(filename).forEachLine {
-    val vertexLabels = it.split(WHITE_SPACE_REGEX).filter(String::isNotEmpty).map(String::toInt)
-    verticesLabels.add(vertexLabels.first() to vertexLabels.drop(1).toIntArray())
-}
+val verticesLabels = readAdjacencyList(filename, 200)
 val INDEX_LABEL_OFFSET = 1
 
 fun createGraph(
@@ -60,7 +52,7 @@ var minNumCutEdges = Int.MAX_VALUE
 for (i in 0 until n * n) {
     println("${i}st iteration")
     val (vertices, edges) = createGraph(verticesLabels, INDEX_LABEL_OFFSET)
-    val vertexMap = vertices.map { it.label to it }.toMap().toMutableMap()
+    val vertexMap = vertices.associateBy(Vertex::label).toMutableMap()
 
     while (vertexMap.size > 2) {
         val edgeToContract = edges.random()

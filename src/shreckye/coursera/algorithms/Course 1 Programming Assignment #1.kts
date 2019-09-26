@@ -1,4 +1,7 @@
+package shreckye.coursera.algorithms
+
 import kotlin.math.max
+import kotlin.test.assertEquals
 
 // Numbers are represented by a string in reverse order
 /*inline*/ class NonnegativeDecimalInteger private constructor(private val standardizedNumberString: String) {
@@ -134,11 +137,13 @@ fun karatsubaTimesWithString(xString: String, yString: String): String {
 
 println(karatsubaTimesWithString(args[0], args[1]))
 
-assert(karatsubaTimesWithString("2", "3") == "6")
-assert(karatsubaTimesWithString("22", "33") == "726")
-assert(karatsubaTimesWithString("10000", "10000") == "100000000")
-for (i in 0 until 1000)
-    for (j in 0 until 1000) {
+
+// Test cases
+assertEquals("6", karatsubaTimesWithString("2", "3"))
+assertEquals("726", karatsubaTimesWithString("22", "33"))
+assertEquals("100000000", karatsubaTimesWithString("10000", "10000"))
+for (i in 0 until 1024)
+    for (j in 0 until 1024) {
         val rString = karatsubaTimesWithString(i.toString(), j.toString())
-        assert(rString == (i * j).toString()) { "Assertion failed for i = $i and j = $j with r = $rString" }
+        assertEquals((i * j).toString(), rString, "i = $i, j = $j")
     }
