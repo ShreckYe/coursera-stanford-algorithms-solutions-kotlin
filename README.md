@@ -1,5 +1,5 @@
 # Coursera Stanford Algorithms Specialization Programming Assignment solutions in Kotlin
-Solutions for Programming Assignments in Courses 1-4 of the Coursera Algorithms Specialization offered by Stanford written in Kotlin scripts
+Solutions for Programming Assignments in Courses 1-4 of the [Coursera Algorithms Specialization](https://www.coursera.org/specializations/algorithms) offered by Stanford written in Kotlin scripts
 
 ## Notices
 1. Enable assertion for all scripts by adding the "-ea" VM option.
