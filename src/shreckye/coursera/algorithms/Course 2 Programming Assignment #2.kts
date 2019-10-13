@@ -1,7 +1,6 @@
 package shreckye.coursera.algorithms
 
 import java.io.File
-import java.util.*
 
 val filename = args[0]
 val ANSWER_VERTICES = intArrayOf(7, 37, 59, 82, 99, 115, 133, 165, 188, 197)
@@ -26,10 +25,11 @@ val INITIAL_DISTANCE = 1000000
 val shortestDistances = IntArray(NUM_VERTICES) { INITIAL_DISTANCE }
 
 val fromVertex = 1 - INDEX_LABEL_OFFSET
-val vertexShortestDistanceHeap = PriorityQueue(NUM_VERTICES, compareBy(VertexDistance::distance))
+val vertexShortestDistanceHeap = CustomPriorityQueue(NUM_VERTICES, compareBy(VertexDistance::distance))
+val vertexDistanceHeapHolders = arrayOfNulls<CustomPriorityQueue.Holder<VertexDistance>>(NUM_VERTICES)
 
 shortestDistances[fromVertex] = 0
-vertexShortestDistanceHeap.offer(VertexDistance(fromVertex, 0))
+vertexDistanceHeapHolders[fromVertex] = vertexShortestDistanceHeap.offerAndGetHolder(VertexDistance(fromVertex, 0))
 repeat(NUM_VERTICES) {
     val (vertex, distance) = vertexShortestDistanceHeap.poll()
 
@@ -38,12 +38,14 @@ repeat(NUM_VERTICES) {
         val headDistance = distance + edge.weight
         if (shortestDistances[head] == INITIAL_DISTANCE) {
             shortestDistances[head] = headDistance
-            vertexShortestDistanceHeap.offer(VertexDistance(head, headDistance))
+            vertexDistanceHeapHolders[head] =
+                vertexShortestDistanceHeap.offerAndGetHolder(VertexDistance(head, headDistance))
         } else if (headDistance < shortestDistances[head]) {
-            // TODO: this step takes O(n) time, thus should be optimized.
-            assert(vertexShortestDistanceHeap.removeIf { it.vertex == head })
             shortestDistances[head] = headDistance
-            vertexShortestDistanceHeap.offer(VertexDistance(head, headDistance))
+            vertexDistanceHeapHolders[head] = vertexShortestDistanceHeap.replaceByHolder(
+                vertexDistanceHeapHolders[head]!!,
+                VertexDistance(head, headDistance)
+            )
         }
     }
 }

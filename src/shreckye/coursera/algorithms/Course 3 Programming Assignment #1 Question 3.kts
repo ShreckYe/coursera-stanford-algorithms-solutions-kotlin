@@ -26,13 +26,14 @@ data class VertexCost(val vertex: Int, val cost: Int)
 
 fun mstOverallCost(verticesEdges: VerticesArrayListSimplifiedEdges, numVertices: Int, initialVertex: Int): Int {
     var mstOverallCost = 0
-    val vertexCostHeap = PriorityQueue(numVertices, compareBy(VertexCost::cost))
+    val vertexCostHeap = CustomPriorityQueue(numVertices, compareBy(VertexCost::cost))
+    val vertexCostHeapHolders = arrayOfNulls<CustomPriorityQueue.Holder<VertexCost>>(numVertices)
     val spanned = BitSet(numVertices)
     val INITIAL_COST = Int.MAX_VALUE
     val minCosts = IntArray(numVertices) { INITIAL_COST }
 
     minCosts[initialVertex] = Int.MIN_VALUE
-    vertexCostHeap.offer(VertexCost(initialVertex, 0))
+    vertexCostHeapHolders[initialVertex] = vertexCostHeap.offerAndGetHolder(VertexCost(initialVertex, 0))
     repeat(numVertices) {
         val (vertex, cost) = vertexCostHeap.poll()
         spanned[vertex] = true
@@ -40,19 +41,18 @@ fun mstOverallCost(verticesEdges: VerticesArrayListSimplifiedEdges, numVertices:
 
         for ((head, headCost) in verticesEdges[vertex]) {
             /* Must check whether it's spanned already,
-        because minCosts of a spanned vertex stores a min cost from previously spanned vertex sets to this vertex,
-        thus might be greater than current cost.
-        This is different from the implementation of Dijkstra's algorithm where we can ignore checking. */
+            because minCosts at a spanned vertex stores a min cost from previously spanned vertex sets to this vertex,
+            thus might be greater than current cost.
+            This is different from the implementation of Dijkstra's algorithm where we can ignore checking. */
             if (!spanned[head]) {
                 //println("$vertex $head $headCost ${minCosts[head]}")
                 if (minCosts[head] == INITIAL_COST) {
                     minCosts[head] = headCost
-                    vertexCostHeap.offer(VertexCost(head, headCost))
+                    vertexCostHeapHolders[head] = vertexCostHeap.offerAndGetHolder(VertexCost(head, headCost))
                 } else if (headCost < minCosts[head]) {
-                    // TODO: this step takes O(n) time, thus should be optimized.
-                    assert(vertexCostHeap.removeIf { it.vertex == head })
                     minCosts[head] = headCost
-                    vertexCostHeap.offer(VertexCost(head, headCost))
+                    vertexCostHeapHolders[head] =
+                        vertexCostHeap.replaceByHolder(vertexCostHeapHolders[head]!!, VertexCost(head, headCost))
                 }
             }
         }

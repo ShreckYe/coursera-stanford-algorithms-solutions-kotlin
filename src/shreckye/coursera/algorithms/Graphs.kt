@@ -8,8 +8,13 @@ data class WeightedSimplifiedEdge(val otherVertex: Int, val weight: Int)
 typealias VerticesSimplifiedEdges = Array<List<WeightedSimplifiedEdge>>
 typealias VerticesArrayListSimplifiedEdges = Array<ArrayList<WeightedSimplifiedEdge>>
 
-class SymmetricDistanceMatrix(numVertices: Int, initialDistance: Int = Int.MAX_VALUE) {
-    val distances = Array(numVertices) { IntArray(it) { initialDistance } }
+class SimpleWeightedGraph {}
+
+@Suppress("EXPERIMENTAL_FEATURE_WARNING")
+inline class SymmetricDistanceMatrix(val distances: Array<IntArray>) {
+    constructor(numVertices: Int, initialDistance: Int = Int.MAX_VALUE) :
+            this(Array(numVertices) { IntArray(it) { initialDistance } })
+
     operator fun set(vertex1: Int, vertex2: Int, distance: Int) {
         if (vertex1 == vertex2) {
             if (distance != 0)
