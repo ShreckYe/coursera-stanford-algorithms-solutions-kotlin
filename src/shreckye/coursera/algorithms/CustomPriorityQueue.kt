@@ -3,7 +3,7 @@ package shreckye.coursera.algorithms
 import java.util.*
 import kotlin.collections.ArrayList
 
-// A custom priority queue implementation that supports O(1) deletion and O(log(n)) replacement with holders
+// A custom priority queue implementation that supports O(log(n)) deletion and replacement with holders
 class CustomPriorityQueue<T : Any>
 private constructor(private val queue: ArrayList<Holder<T>>, private val comparator: Comparator<T>) :
     AbstractQueue<T>() {
