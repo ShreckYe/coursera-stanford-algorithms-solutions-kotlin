@@ -72,18 +72,22 @@ private constructor(private val queue: ArrayList<Holder<T>>, private val compara
         override fun remove() = throw NotImplementedError()
     }
 
-    private fun removeAt(index: Int) {
-        val newHolder = queue.removeAt(queue.size - 1)
-        queue[index] = newHolder
-        bubbleUpOrDown(index, newHolder)
+    private fun removeAt(index: Int, holder: Holder<T> = queue[index]) {
+        val lastIndex = queue.size - 1
+        val newHolder = queue.removeAt(lastIndex)
+        if (index < lastIndex) {
+            moveTo(index, newHolder)
+            bubbleUpOrDown(comparator.compare(newHolder.value, holder.value), index, newHolder)
+        }
     }
 
     fun removeByHolder(holder: Holder<T>) =
-        removeAt(holder.index)
+        removeAt(holder.index, holder)
 
     fun replaceByHolder(holder: Holder<T>, newValue: T): Holder<T> {
+        val oldValue = holder.value
         holder.value = newValue
-        bubbleUpOrDown(holder.index, holder)
+        bubbleUpOrDown(comparator.compare(newValue, oldValue), holder.index, holder)
         return holder
     }
 
@@ -91,14 +95,14 @@ private constructor(private val queue: ArrayList<Holder<T>>, private val compara
         queue.first().value
 
     override fun poll(): T {
-        val e = queue[0].value
+        val value = queue.first().value
         val newHolder = queue.removeAt(queue.size - 1)
         if (queue.isNotEmpty()) {
-            queue[0] = newHolder
+            moveTo(0, newHolder)
             bubbleDown(0, newHolder)
         }
 
-        return e
+        return value
     }
 
     private tailrec fun bubbleUp(index: Int, holder: Holder<T> = queue[index]) {
@@ -147,9 +151,15 @@ private constructor(private val queue: ArrayList<Holder<T>>, private val compara
             moveTo(index, smallerChildHolder)
     }*/
 
-    private fun bubbleUpOrDown(index: Int, holder: Holder<T> = queue[index]) {
+    /*private fun bubbleUpOrDown(index: Int, holder: Holder<T> = queue[index]) {
         // Simple implementation with redundant checks
         bubbleUp(index, holder)
         bubbleDown(index, holder)
+    }*/
+    private fun bubbleUpOrDown(compareResult: Int, index: Int, holder: Holder<T> = queue[index]) {
+        if (compareResult < 0)
+            bubbleUp(index, holder)
+        else if (compareResult > 0)
+            bubbleDown(index, holder)
     }
 }

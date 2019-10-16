@@ -27,7 +27,7 @@ fun largestKWithSpacingAtLeast(numNodes: Int, numBits: Int, nodes: IntArray, spa
 
     val nodeIndexPairsAtDistances = (0 until spacingAtLeast).map { distance ->
         nodes.withIndex().asSequence().flatMap { (index1, node1) ->
-            node1.flipPossibilitySequence(numBits, distance)
+            node1.flipSequence(numBits, distance)
                 .mapNotNull { indicesAtNodes[it] }
                 .flatMap { it.asSequence() }
                 .filter { index2 -> index1 < index2 }
@@ -41,16 +41,5 @@ fun largestKWithSpacingAtLeast(numNodes: Int, numBits: Int, nodes: IntArray, spa
         }
     }
 }
-
-fun Int.flipPossibilitySequence(numBits: Int, hammingDistance: Int, bitsFlipped: Int = 0): Sequence<Int> =
-    if (hammingDistance == 0)
-        sequenceOf(this)
-    else
-        (0 until numBits).asSequence()
-            .map { 1 shl it }
-            .filter { bitsFlipped and it == 0 }
-            .flatMap {
-                (this xor it).flipPossibilitySequence(numBits, hammingDistance - 1, bitsFlipped or it)
-            }
 
 println(largestKWithSpacingAtLeast(numNodes, numBits, nodes, 3))

@@ -8,7 +8,7 @@ import kotlin.math.min
 val filename = args[0]
 val (numSymbols, symbolWeights) = File(filename).bufferedReader().use {
     val numSymbols = it.readLine().toInt()
-    val symbolWeights = it.useLines { it.map(String::toInt).toIntArray(numSymbols) }
+    val symbolWeights = it.lineSequence().map(String::toInt).toIntArray(numSymbols)
     numSymbols to symbolWeights
 }
 
@@ -31,7 +31,7 @@ while (minNodeHeap.size > 1) {
     minNodeHeap.offer(HuffmanInternalNode(minNode1.weight + minNode2.weight, minNode1, minNode2))
 }
 
-fun HuffmanNode.maxAndMinLength(): Pair<Int, Int> =
+fun HuffmanNode.maxAndMinLength(): IntPair =
     when (this) {
         is HuffmanLeafNode ->
             1 to 1

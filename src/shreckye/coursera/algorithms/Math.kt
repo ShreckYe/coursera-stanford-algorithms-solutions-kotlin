@@ -12,3 +12,6 @@ infix fun Int.pow(y: Int): Int =
             r
         }
     }
+
+fun Double.squared(): Double =
+    this * this

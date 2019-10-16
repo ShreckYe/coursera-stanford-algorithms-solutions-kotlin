@@ -53,7 +53,7 @@ fun quickSortAndCountNumComparisonsUsingMedianOfThreeAsPivot(integers: IntArray)
         val middle = ((left + right - 1) / 2).let { it to this[it] }
         val final = (right - 1).let { it to this[it] }
         val three = arrayOf(first, middle, final)
-        three.sortBy(Pair<Int, Int>::second)
+        three.sortBy(IntPair::second)
         three[1].first
     }
 

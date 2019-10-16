@@ -14,12 +14,12 @@ fun IntArray.asSimpleMutableMap(): SimpleMutableMap<Int, Int> = object : SimpleM
     }
 }
 
-fun Array<IntArray>.asSimpleMutableMap(): SimpleMutableMap<Pair<Int, Int>, Int> =
-    object : SimpleMutableMap<Pair<Int, Int>, Int> {
-        override fun get(key: Pair<Int, Int>): Int =
+fun Array<IntArray>.asSimpleMutableMap(): SimpleMutableMap<IntPair, Int> =
+    object : SimpleMutableMap<IntPair, Int> {
+        override fun get(key: IntPair): Int =
             this@asSimpleMutableMap[key.first][key.second]
 
-        override fun set(key: Pair<Int, Int>, value: Int) {
+        override fun set(key: IntPair, value: Int) {
             this@asSimpleMutableMap[key.first][key.second] = value
         }
     }

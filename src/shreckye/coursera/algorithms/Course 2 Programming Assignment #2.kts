@@ -18,37 +18,8 @@ File(filename).forEachLine {
     }
 }
 
-
-data class VertexDistance(val vertex: Int, val distance: Int)
-
 val INITIAL_DISTANCE = 1000000
-val shortestDistances = IntArray(NUM_VERTICES) { INITIAL_DISTANCE }
 
-val fromVertex = 1 - INDEX_LABEL_OFFSET
-val vertexShortestDistanceHeap = CustomPriorityQueue(NUM_VERTICES, compareBy(VertexDistance::distance))
-val vertexDistanceHeapHolders = arrayOfNulls<CustomPriorityQueue.Holder<VertexDistance>>(NUM_VERTICES)
-
-shortestDistances[fromVertex] = 0
-vertexDistanceHeapHolders[fromVertex] = vertexShortestDistanceHeap.offerAndGetHolder(VertexDistance(fromVertex, 0))
-repeat(NUM_VERTICES) {
-    val (vertex, distance) = vertexShortestDistanceHeap.poll()
-
-    for (edge in verticesEdges[vertex]) {
-        val head = edge.otherVertex
-        val headDistance = distance + edge.weight
-        if (shortestDistances[head] == INITIAL_DISTANCE) {
-            shortestDistances[head] = headDistance
-            vertexDistanceHeapHolders[head] =
-                vertexShortestDistanceHeap.offerAndGetHolder(VertexDistance(head, headDistance))
-        } else if (headDistance < shortestDistances[head]) {
-            shortestDistances[head] = headDistance
-            vertexDistanceHeapHolders[head] = vertexShortestDistanceHeap.replaceByHolder(
-                vertexDistanceHeapHolders[head]!!,
-                VertexDistance(head, headDistance)
-            )
-        }
-    }
-}
-assert(vertexShortestDistanceHeap.isEmpty()) { "size = ${vertexShortestDistanceHeap.size}" }
-
+val shortestDistances =
+    dijkstraShortestPathDistances(verticesEdges, NUM_VERTICES, 1 - INDEX_LABEL_OFFSET, INITIAL_DISTANCE)
 println(ANSWER_VERTICES.map { shortestDistances[it - INDEX_LABEL_OFFSET] }.joinToString(","))

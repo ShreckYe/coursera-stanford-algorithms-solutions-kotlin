@@ -12,12 +12,10 @@ fun File.readKnapsackData() =
     bufferedReader().use {
         val (knapsackSize, numItems) = it.readLine().splitToInts()
 
-        val items = it.useLines {
-            it.map {
-                val lineInts = it.splitToInts()
-                Item(lineInts[0], lineInts[1])
-            }.toList()
-        }
+        val items = it.lineSequence().map {
+            val lineInts = it.splitToInts()
+            Item(lineInts[0], lineInts[1])
+        }.toList()
 
         Triple(knapsackSize, numItems, items)
     }
@@ -61,7 +59,7 @@ fun knapsackIterativeWithSingleArray(items: List<Item>, n: Int, w: Int): Int {
 val UNKNWON = Int.MIN_VALUE
 fun knapsackRecursive(
     items: List<Item>, n: Int, w: Int,
-    mvs: SimpleMutableMap<Pair<Int, Int>, Int>
+    mvs: SimpleMutableMap<IntPair, Int>
 ): Int {
     val nw = n to w
     var mvwn = mvs[nw]
@@ -86,10 +84,10 @@ fun knapsackRecursive(
 
 fun knapsackRecursiveWithHashMapOfArrays(items: List<Item>, n: Int, w: Int): Int {
     val nSize = n + 1
-    return knapsackRecursive(items, n, w, object : SimpleMutableMap<Pair<Int, Int>, Int> {
+    return knapsackRecursive(items, n, w, object : SimpleMutableMap<IntPair, Int> {
         val mvs = HashMap<Int, IntArray>()
         @Suppress("NAME_SHADOWING")
-        override fun get(key: Pair<Int, Int>): Int {
+        override fun get(key: IntPair): Int {
             val (n, w) = key
             val mvsw = mvs[w]
             return if (mvsw != null)
@@ -99,7 +97,7 @@ fun knapsackRecursiveWithHashMapOfArrays(items: List<Item>, n: Int, w: Int): Int
         }
 
         @Suppress("NAME_SHADOWING")
-        override fun set(key: Pair<Int, Int>, value: Int) {
+        override fun set(key: IntPair, value: Int) {
             val (n, w) = key
             var mvsw = mvs[w]
             if (mvsw == null) {
@@ -113,7 +111,7 @@ fun knapsackRecursiveWithHashMapOfArrays(items: List<Item>, n: Int, w: Int): Int
 }
 
 fun knapsackRecursiveWithHashMap(items: List<Item>, n: Int, w: Int): Int =
-    knapsackRecursive(items, n, w, HashMap<Pair<Int, Int>, Int>().asSimpleMutableMap({ (ni, wi) ->
+    knapsackRecursive(items, n, w, HashMap<IntPair, Int>().asSimpleMutableMap({ (ni, wi) ->
         ni in 0..n && wi in 0..w
     }, UNKNWON))
 
