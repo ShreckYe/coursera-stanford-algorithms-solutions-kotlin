@@ -39,7 +39,7 @@ fun medianSum(integers: IntArray): Int {
     return medianSum
 }
 
-println(medianSum(integers))
+println(medianSum(integers) % 10000)
 
 
 // Test cases

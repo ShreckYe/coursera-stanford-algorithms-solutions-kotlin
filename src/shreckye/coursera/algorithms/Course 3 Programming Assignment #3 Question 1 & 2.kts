@@ -34,7 +34,7 @@ while (minNodeHeap.size > 1) {
 fun HuffmanNode.maxAndMinLength(): IntPair =
     when (this) {
         is HuffmanLeafNode ->
-            1 to 1
+            0 to 0
         is HuffmanInternalNode -> {
             val (leftMaxLength, leftMinLength) = leftChild.maxAndMinLength()
             val (rightMaxLength, rightMinLength) = rightChild.maxAndMinLength()

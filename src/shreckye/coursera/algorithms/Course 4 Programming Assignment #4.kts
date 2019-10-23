@@ -42,4 +42,4 @@ val results = clauses.map { (numVariables, clauses) ->
     }
 }
 
-println(results.map { if (it) 1 else 0 }.joinToString(","))
+println(results.map { if (it) 1 else 0 }.joinToString(""))

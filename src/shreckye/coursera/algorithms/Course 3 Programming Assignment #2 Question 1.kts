@@ -27,7 +27,7 @@ fun maximumSpacing(numVertices: Int, distanceMatrix: SymmetricDistanceMatrix, k:
     minDistanceEdgeHeap.addAll(distanceMatrix.asEdgeSequence().toList())
 
     var numClusters = numVertices
-    while (numClusters > K) {
+    while (numClusters > k) {
         val minDistanceEdge = minDistanceEdgeHeap.poll()
 
         if (clusterUnionFind.findAndUnionIfNecessary(minDistanceEdge.vertex1, minDistanceEdge.vertex2))

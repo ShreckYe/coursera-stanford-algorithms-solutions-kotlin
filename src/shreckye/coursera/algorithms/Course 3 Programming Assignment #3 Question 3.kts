@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 val filename = args[0]
 val INDEX_LABEL_OFFSET = 1
-val questionVertexLabels = intArrayOf(1, 2, 3, 4, 17, 117, 517)
+val questionVertexLabels = intArrayOf(1, 2, 3, 4, 17, 117, 517, 997)
 val (numVertices, vertexWeights) = File(filename).bufferedReader().use {
     val numVertices = it.readLine().toInt()
     val vertexWeights = it.lineSequence().map(String::toInt).toIntArray(numVertices)
