@@ -10,6 +10,6 @@ fun <T> List<T>.subsets(): Sequence<Sequence<T>> =
         sequenceOf(emptySequence())
     else {
         val first = first()
-        val drop1ListSubsets = drop(1).subsets()
-        drop1ListSubsets + drop1ListSubsets.map { sequenceOf(first) + it }
+        val tailSubsets = subList(1, size).subsets()
+        tailSubsets + tailSubsets.map { sequenceOf(first) + it }
     }
